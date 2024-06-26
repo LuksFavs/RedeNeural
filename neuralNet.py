@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import math as m
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler #use .transform to transform
+
+#TODO - backpropagation, lossfunction on main loop, implement minmaxScaler and standard
 
 iris = pd.read_csv('iris.csv')
 
@@ -60,23 +64,35 @@ def redeN(inicial, final, ativFunc, perda, dataset, treinamento, teste):
     # perda = funcao de perda a ser usada, algumas disponiveis na classe perda acima
     # 1 camada escondida com (inicial + final) / 2 neuroneos
 
-    tamanhoInter = np.random.randint(4, inicial+final)
+    tamanhoInter = np.random.randint(inicial*1.5, inicial*2)
     tamanhoTot = tamanhoInter + inicial + final
-    pesosIni = np.random.normal( size = (inicial, inicial) )
     pesosInt = np.random.normal( size = (inicial, tamanhoInter) )
     pesosFin = np.random.normal( size = (tamanhoInter, final) )
-    bias = np.zeros(shape=3)
-
-    z=np.matmul(np.array([1,1,1,1]), pesosIni)
-
-    print(pesosIni, "\n", z)
-
+    bias = np.zeros(shape=2)
+    entrada = np.random.uniform(0,2,size=4) 
+    for i in range(30):
+        z1=np.matmul(entrada, pesosInt)
+        z1=z1+bias[0]
+        a1=ativFunc(z1)
+        z2=np.matmul(a1,pesosFin)
+        z2=z2+bias[1]
+        a2=ativFunc(z2)
 
     return
 
 classe = ativacao()
 ati = classe.sigmoide
-redeN(4,4,ati,4,iris,7,4)
+classe2 = perda()
+per=classe2.m2
+
+classif = iris["target"]
+iris = iris.drop(["target"], axis=1)
+entradas = iris.to_numpy()
+onehot = pd.get_dummies(classif, dtype=float)
+onehot=onehot.to_numpy()
+print(entradas)
+
+# redeN(4,3,ati,per,,7,4)
 
 # q = np.random.uniform(-2,2,20)
 # print("base:\n", q)
